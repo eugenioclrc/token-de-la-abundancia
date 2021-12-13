@@ -10,8 +10,9 @@
     "heroku-prebuild": "npm install && npm install --prefix ./web",
     "dev": "npm run dev --prefix ./web",
     "preview": "npm run preview --prefix ./web",
-    "build": "npm run build --prefix ./web"
+    "build": "#TBD npm run build --prefix ./web"
   },
   "author": "eugenioclrc",
+  "url": "https://eugenioclrc.github.io/token-de-la-abundancia/",
   "license": "MIT"
 }
