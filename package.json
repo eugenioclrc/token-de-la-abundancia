@@ -1,0 +1,17 @@
+{
+  "name": "token-de-la-abundancia",
+  "version": "1.0.0",
+  "description": "El token de la abundancia es un nft meme de los telares de la abundancia, la idea es demostrar que no es mas que un ponzi salvaje",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test --prefix ./hardhat",
+    "start": "npm run preview --prefix ./web",
+    "postinstall": "npm install --prefix ./web && npm install --prefix ./hardhat",
+    "heroku-prebuild": "npm install && npm install --prefix ./web",
+    "dev": "npm run dev --prefix ./web",
+    "preview": "npm run preview --prefix ./web",
+    "build": "npm run build --prefix ./web"
+  },
+  "author": "eugenioclrc",
+  "license": "MIT"
+}
