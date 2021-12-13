@@ -182,8 +182,6 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721URIStorage, ERC721Enumerable
                 '"description":"',_descs[_status],'"}'
                         /*
                         '{"name":"',_names[tokenId],'",', // You can add whatever name here
-                        '"description":"Plate #',Strings.toString(tokenId+1),' is the next drop of a series of animations. It is part of a work in progress called \'El sol da sin recibir\' that unfolds in the using of various materials and media, so far, mutating from collage to sculpture, from sculpture to painting and from public interventions to animations released as NFTs.",',
-                        '"animation_url":"',baseHTML,'?token=',Strings.toString(tokenId),'",',
                         '"attributes":"", "image":"',baseHTML,'?token=',Strings.toString(tokenId),'"}'
                         */
               )
