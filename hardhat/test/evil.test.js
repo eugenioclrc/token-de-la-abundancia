@@ -3,7 +3,7 @@ const { expect } = require("chai");
 let deployer, alice, evilUser;
 let token;
 
-describe("Basic test", function() {
+describe("Evil test", function() {
   before(async () => {
     [deployer, alice, bob, evilUser, dev] = await ethers.getSigners();
   })

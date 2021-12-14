@@ -186,11 +186,29 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
 
       // https://ethereum.stackexchange.com/questions/78562/is-it-possible-to-perform-a-try-catch-in-solidity
       // https://ethereum.stackexchange.com/questions/19341/address-send-vs-address-transfer-best-practice-usage
-      (bool success, ) = dev.call{value:_amountFee}("");      
+      bool success;
+      dev.call{value:_amountFee}("");
       (success, ) = ownerOf(tokenIdReferrer).call{value:_amountFuego}("");
+      if(success == false) {
+        uint256 _aux = _amountFuego / 3;
+        _amountAire += _aux;
+        _amountTierra += _aux;
+        _amountAgua += _aux;
+      }
       (success, ) = ownerOf(getParent(tokenId, 1)).call{value:_amountAire}("");
+      if(success == false) {
+        uint256 _aux = _amountAire / 2;
+        _amountTierra += _aux;
+        _amountAgua += _aux;
+      }
       (success, ) = ownerOf(getParent(tokenId, 2)).call{value:_amountTierra}("");
+      if(success == false) {
+        _amountAgua += _amountTierra;
+      }
       (success, ) = ownerOf(_aguaTokenId).call{value:_amountAgua}("");
+      if(success == false) {
+        dev.call{value:_amountAgua}("");      
+      }
       uint256 _changeReturn = msg.value - PRICE;
       if (_changeReturn > 0) {
         (success, ) = msg.sender.call{value:_changeReturn}("");
