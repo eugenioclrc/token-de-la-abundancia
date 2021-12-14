@@ -158,6 +158,9 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
     }
 
     function mint(uint256 tokenIdReferrer, string memory detail) public payable {
+      // para evitar un DoS with (Unexpected) revert
+      // https://consensys.github.io/smart-contract-best-practices/known_attacks/#dos-with-unexpected-revert
+      require(tx.origin == msg.sender, "Only EOA are allowed");
       require(msg.value >= PRICE, "El valor debe ser exacto, 0.025 ETH");
       require(_exists(tokenIdReferrer), "La mandala no existe");
       // solo FUEGO puede invitar personas
@@ -205,11 +208,6 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
     {
         super._beforeTokenTransfer(from, to, tokenId);
     }
-    /*
-        function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
-        super._burn(tokenId);
-    }
-    */
 
     function getParent(uint256 tokenId, uint256 deepLevel) public view returns (uint256) {
       require(deepLevel < 4, "Deep level must be less than 4");
