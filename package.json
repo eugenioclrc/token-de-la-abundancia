@@ -10,7 +10,8 @@
     "heroku-prebuild": "npm install && npm install --prefix ./web",
     "dev": "npm run dev --prefix ./web",
     "preview": "npm run preview --prefix ./web",
-    "build": "#TBD npm run build --prefix ./web"
+    "build": "# npm run build --prefix ./web && cp -R ./web/build ./docs",
+    "local-build": "npm run build --prefix ./web && cp -R ./web/build/* ./docs"
   },
   "author": "eugenioclrc",
   "url": "https://eugenioclrc.github.io/token-de-la-abundancia/",
