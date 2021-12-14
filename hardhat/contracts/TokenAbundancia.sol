@@ -13,10 +13,6 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 import "base64-sol/base64.sol";
 
-interface ItonyNft {
-  function mint(address _to) external;
-}
-
 contract TonyRiosNFT is ERC721, Ownable {
     using Counters for Counters.Counter;
 
@@ -37,14 +33,7 @@ contract TonyRiosNFT is ERC721, Ownable {
               
     }
 
-    // The following functions are overrides required by Solidity.
-
-    /*function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
-        super._burn(tokenId);
-    }
-    */
-
-        function tokenURI(uint256 tokenId)
+    function tokenURI(uint256 tokenId)
         public
         view
         override(ERC721)
@@ -68,7 +57,6 @@ contract TonyRiosNFT is ERC721, Ownable {
       );
     }
 
-
 }
 
 
@@ -81,7 +69,7 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
 
     uint256 PRICE = 0.025 ether;
     address public dev;
-    TonyRiosNFT public _tonyNFT;
+    TonyRiosNFT public tonyNFT;
 
     mapping (uint256 => uint256[2]) public _referrer;
     mapping (uint256 => uint256) public _parent;
@@ -110,7 +98,7 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
 
     // Mandala el token de la Abundancia
     constructor(address dev_) ERC721("Mandala", "MDL") {
-      _tonyNFT = new TonyRiosNFT();
+      tonyNFT = new TonyRiosNFT();
       dev = dev_;
       _tokenIdCounter.increment();
       _safeMint(msg.sender, _tokenIdCounter.current());
@@ -157,10 +145,11 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
       // emit DetailChanged(tokenId, detail);
     }
 
-    function mint(uint256 tokenIdReferrer, string memory detail) public payable {
+    function mint(uint256 tokenIdReferrer, string memory detail) external payable {
       // para evitar un DoS with (Unexpected) revert
       // https://consensys.github.io/smart-contract-best-practices/known_attacks/#dos-with-unexpected-revert
-      require(tx.origin == msg.sender, "Only EOA are allowed");
+      // require(tx.origin == msg.sender, "Only EOA are allowed");
+      // en vez del require, uso el try catch, si falla la trasnferencia por ser un contrato malicioso, no se rompe nada
       require(msg.value >= PRICE, "El valor debe ser exacto, 0.025 ETH");
       require(_exists(tokenIdReferrer), "La mandala no existe");
       // solo FUEGO puede invitar personas
@@ -186,20 +175,26 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
       uint256 _amountFee = ((PRICE * 10) / 1000);
       uint256 _amountAgua = ((PRICE * 490) / 1000);
       uint256 _amountTierra = ((PRICE * 300) / 1000);
-      uint256 _amountAire = PRICE - _amountFee - _amountTierra - _amountAgua;
+      uint256 _amountAire = ((PRICE * 150) / 1000);
+      uint256 _amountFuego = PRICE - _amountFee - _amountTierra - _amountAgua - _amountAire;
 
       uint256 _aguaTokenId = getParent(tokenId, 3);
       
       if (status(_aguaTokenId) == 3) {
-        _tonyNFT.safeMint(ownerOf(_aguaTokenId));
+        tonyNFT.safeMint(ownerOf(_aguaTokenId));
       }
 
-      payable(dev).transfer(_amountFee);
-      payable(ownerOf(getParent(tokenId, 1))).transfer(_amountAire);
-      payable(ownerOf(getParent(tokenId, 2))).transfer(_amountTierra);
-      payable(ownerOf(_aguaTokenId)).transfer(_amountAgua);
-      payable(msg.sender).transfer(msg.value - PRICE);
-      
+      // https://ethereum.stackexchange.com/questions/78562/is-it-possible-to-perform-a-try-catch-in-solidity
+      // https://ethereum.stackexchange.com/questions/19341/address-send-vs-address-transfer-best-practice-usage
+      (bool success, ) = dev.call{value:_amountFee}("");      
+      (success, ) = ownerOf(tokenIdReferrer).call{value:_amountFuego}("");
+      (success, ) = ownerOf(getParent(tokenId, 1)).call{value:_amountAire}("");
+      (success, ) = ownerOf(getParent(tokenId, 2)).call{value:_amountTierra}("");
+      (success, ) = ownerOf(_aguaTokenId).call{value:_amountAgua}("");
+      uint256 _changeReturn = msg.value - PRICE;
+      if (_changeReturn > 0) {
+        (success, ) = msg.sender.call{value:_changeReturn}("");
+      }
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
@@ -215,7 +210,7 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
       uint256 parent_ = _parent[tokenId];
       // console.log("deeplevel", deepLevel);
       // console.log("parent of", tokenId, "=>", parent_);
-      if (parent_ == 0) {
+      if (parent_ == 0 || deepLevel == 0) {
         return tokenId;
       }
       if (deepLevel == 1) {
