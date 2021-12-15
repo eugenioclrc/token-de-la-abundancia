@@ -9,10 +9,10 @@
     "chai": "^4.3.4",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.2",
-    "hardhat": "^2.7.1"
+    "hardhat": "^2.8.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.4.0",
+    "@openzeppelin/contracts": "^4.4.1",
     "base64-sol": "^1.1.0",
     "dotenv": "^10.0.0",
     "hardhat-abi-exporter": "^2.3.1"
