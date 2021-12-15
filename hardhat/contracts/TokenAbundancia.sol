@@ -96,12 +96,16 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
       'QmPabcDsZ2B5XiUR12WGj5Hig1D5AYod2qzMYHh1f5Rez2'
     ];
 
+    event LadderUp(address owner, uint256 tokenId);
+    event Join(uint256 tokenIdRef, uint256 tokenId);
+
     // Mandala el token de la Abundancia
     constructor(address dev_) ERC721("Mandala", "MDL") {
       tonyNFT = new TonyRiosNFT();
       dev = dev_;
       _tokenIdCounter.increment();
       _safeMint(msg.sender, _tokenIdCounter.current());
+      _detail[_tokenIdCounter.current()] = "Genesis mandala, a ver si esto me saca de los numeros rojos-";
       _tokenIdCounter.increment();
 
     }
@@ -112,7 +116,6 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
     // 2 TIERRA
     // 3 AGUA
     function status(uint256 tokenId) public view returns (uint8) {
-      require(_exists(tokenId), "La mandala no existe");
       if(_filled[tokenId] == false) {
         return 0;
       }
@@ -162,9 +165,11 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
       if (_referrer[tokenIdReferrer][0] == 0) {
         _referrer[tokenIdReferrer][0] = tokenId;
       } else {
+        emit LadderUp(ownerOf(tokenIdReferrer), tokenIdReferrer);
         _filled[tokenIdReferrer] = true;
         _referrer[tokenIdReferrer][1] = tokenId;
       }
+      emit Join(tokenIdReferrer, tokenId);
 
       _parent[tokenId] = tokenIdReferrer;
       _safeMint(msg.sender, tokenId);
@@ -188,6 +193,7 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
       // https://ethereum.stackexchange.com/questions/19341/address-send-vs-address-transfer-best-practice-usage
       bool success;
       dev.call{value:_amountFee}("");
+
       (success, ) = ownerOf(tokenIdReferrer).call{value:_amountFuego}("");
       if(success == false) {
         uint256 _aux = _amountFuego / 3;
@@ -238,6 +244,10 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
       return getParent(parent_, deepLevel - 1);
     }
 
+    function tokenIdCounter() public view returns (uint256) {
+      return _tokenIdCounter.current();
+    }
+
     function supportsInterface(bytes4 interfaceId)
         public
         view
@@ -245,6 +255,19 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
+    }
+
+    function tokenData(uint256 tokenId)
+        public
+        view
+        returns (uint256 id, uint8 status_, address owner, string memory detail)
+    {
+      if(_exists(tokenId)) {
+        uint8 _status = status(tokenId);
+        return (tokenId, _status, ownerOf(tokenId), _detail[tokenId]);
+      } else {
+        return (0, 0, address(0), "");
+      }
     }
 
     
