@@ -270,8 +270,55 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
       }
     }
 
+
+    function getTokenNetwork(uint256 id) public view returns ( uint256[] memory) {
+      /*
+      uint256 parent_ = ;
+      
+      
+      // level 2
+      uint256 child00_ = _referrer[child0_][0];
+      uint256 child01_ = _referrer[child0_][1];
+      uint256 child10_ = _referrer[child1_][0];
+      uint256 child11_ = _referrer[child1_][1];
+
+      // level 3
+      uint256 child000_ = _referrer[child0_][0];
+      uint256 child001_ = _referrer[child0_][1];
+      uint256 child010_ = _referrer[child1_][0];
+      uint256 child011_ = _referrer[child1_][1];
+
+      uint256 child100_ = _referrer[child0_][0];
+      uint256 child101_ = _referrer[child0_][1];
+      uint256 child110_ = _referrer[child1_][0];
+      uint256 child111_ = _referrer[child1_][1];
+      */
+      uint256[] memory tokenNetwork_ = new uint256[](16);
+      tokenNetwork_[0] = _parent[id];
+      tokenNetwork_[1] = id;
+      // level 1
+      tokenNetwork_[2] = _referrer[id][0];
+      tokenNetwork_[3] = _referrer[id][1];
+      // level 2
+      tokenNetwork_[4] = _referrer[_referrer[id][0]][0];
+      tokenNetwork_[5] = _referrer[_referrer[id][0]][1];
+      tokenNetwork_[6] = _referrer[_referrer[id][1]][0];
+      tokenNetwork_[7] = _referrer[_referrer[id][1]][1];
+      // level 3
+      tokenNetwork_[8] = _referrer[_referrer[_referrer[id][0]][0]][0];
+      tokenNetwork_[9] = _referrer[_referrer[_referrer[id][0]][0]][1];
+      tokenNetwork_[10] = _referrer[_referrer[_referrer[id][0]][1]][0];
+      tokenNetwork_[11] = _referrer[_referrer[_referrer[id][0]][1]][1];
+      tokenNetwork_[12] = _referrer[_referrer[_referrer[id][1]][0]][0];
+      tokenNetwork_[13] = _referrer[_referrer[_referrer[id][1]][0]][1];
+      tokenNetwork_[14] = _referrer[_referrer[_referrer[id][1]][1]][0];
+      tokenNetwork_[15] = _referrer[_referrer[_referrer[id][1]][1]][1];
+
+      return tokenNetwork_;
+    }
+
     
-        // override(ERC721, ERC721URIStorage)
+    // override(ERC721, ERC721URIStorage)
     function tokenURI(uint256 tokenId)
         public
         view
