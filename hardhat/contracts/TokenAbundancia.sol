@@ -340,11 +340,8 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
                 '{"name":"',_names[_status],','
                 '"description":"',_descs[_status],'",',
                 '"external_url":"',_url,Strings.toString(tokenId),'",', 
+                '"attributes":[{"trait_type":"State","value":"',_names[_status],'"}],',
                 '"image":"ipfs://',_images[_status],'"}'
-                        /*
-                        '{"name":"',_names[tokenId],'",', // You can add whatever name here
-                        '"attributes":"", "image":"',baseHTML,'?token=',Strings.toString(tokenId),'"}'
-                        */
               )
             )
           )

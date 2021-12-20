@@ -33,16 +33,19 @@
                 class="flex-col mt-2 space-y-4 md:flex md:space-y-0 md:flex-row md:items-center md:space-x-10 md:mt-0
 								{isOpen ? 'flex' : 'hidden'}">
                 <a class="text-sm font-medium text-gray-200 transition-colors duration-300 transform hover:text-indigo-400"
-                    href="#">Home</a>
-                <a class="text-sm font-medium text-gray-200 transition-colors duration-300 transform hover:text-indigo-400"
-                    href="#">Templates</a>
-                <a class="text-sm font-medium text-gray-200 transition-colors duration-300 transform hover:text-indigo-400"
-                    href="#">Price</a>
-                <a class="text-sm font-medium text-gray-200 transition-colors duration-300 transform hover:text-indigo-400"
-                    href="#">Help</a>
+                    href="/app">Listado</a>
+                {#if $wrongNetwork}
+                    <button class="px-4 py-1 text-sm font-medium text-center text-gray-200 transition-colors duration-300 transform border rounded hover:bg-indigo-400"
+                    on:click={() => changeNetwork()}>Wrong network</button>
+                {:else}
+                    <span class="px-4 py-1 text-sm font-medium text-center text-gray-200 transition-colors duration-300 transform border rounded">
+                        ROPSTEN
+                    </span>
+
+                {/if}
                 {#if $wallet}
                 <a class="px-4 py-1 text-sm font-medium text-center text-gray-200 transition-colors duration-300 transform border rounded hover:bg-indigo-400"
-                    href="#more">{$wallet.slice(0,4)}...{$wallet.slice(-4)}</a>
+                    href="/app/holdings">{$wallet.slice(0,4)}...{$wallet.slice(-4)}</a>
                 {/if}
             </div>
         </nav>

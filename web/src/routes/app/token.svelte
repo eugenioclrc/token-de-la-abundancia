@@ -89,11 +89,20 @@ import Token from '$lib/Token.svelte';
 </script>
 <div class="m-4">
   {#if token.parent}
-    <div class="level-1 rectangle" style="margin-bottom: 20px;">
+    <div class="level-1 rectangle border " 
+    class:border-red-700={token.parent.status == 0}
+    class:border-blue-600={token.parent.status == 1}
+    class:border-green-100={token.parent.status == 2}
+    class:border-blue-100={token.parent.status == 3}
+    style="margin-bottom: 20px;">
       <Token token={token.parent}></Token>
     </div>
   {/if}
-  <div class="level-1 rectangle">
+  <div class="level-1 rectangle border"
+  class:border-red-700={token.status == 0}
+    class:border-blue-600={token.status == 1}
+    class:border-green-100={token.status == 2}
+    class:border-blue-100={token.status == 3}>
     <Token {token}></Token>
   </div>
   <!-- <button on:click={() => { alert('todo'); }} class="font-bold rounded bg-gray-200 p-2">UNIRME!</button> -->
@@ -101,27 +110,39 @@ import Token from '$lib/Token.svelte';
   {#each token.childs as level1}
     {#if level1}
       <li>
-        <div class="level-2 rectangle">
+        <div class="level-2 rectangle border"
+        class:border-red-700={level1.status == 0}
+    class:border-blue-600={level1.status == 1}
+    class:border-green-100={level1.status == 2}
+    class:border-blue-100={level1.status == 3}>
           <Token token={level1}></Token>
         </div>
         <ol class="level-3-wrapper">
           {#each level1.childs || [] as level2}
             {#if level2}
               <li>
-                <div class="level-3 rectangle">
+                <div class="level-3 rectangle border"
+                class:border-red-700={level2.status == 0}
+    class:border-blue-600={level2.status == 1}
+    class:border-green-100={level2.status == 2}
+    class:border-blue-100={level2.status == 3}>
                   <Token token={level2}></Token>
                 </div>
                 <ol class="level-4-wrapper">
                   {#each level2.childs || [] as level3}
                     {#if level3}
                       <li>
-                        <div class="level-4 rectangle">
+                        <div class="level-4 rectangle border"
+                        class:border-red-700={level3.status == 0}
+    class:border-blue-600={level3.status == 1}
+    class:border-green-100={level3.status == 2}
+    class:border-blue-100={level3.status == 3}>
                           <Token token={level3}></Token>
                         </div>
                       </li>
                     {:else}
                       <li>
-                        <h4 class="level-4 rectangle">Chispita! unete! nanana nanana mandala</h4>
+                        <button class="level-4 rectangle bg-gray-200 p-2 hover:font-bold hover:bg-gray-300">Chispita! unete, click aqui! nanana nanana mandala</button>
                       </li>
                     {/if}
                   {/each}
@@ -129,7 +150,7 @@ import Token from '$lib/Token.svelte';
               </li>
             {:else}
               <li>
-                <h3 class="level-3 rectangle">Chispita! unete! nanana nanana mandala</h3>
+                <button class="level-3 rectangle bg-gray-200 p-2 hover:font-bold hover:bg-gray-300">Chispita! unete, click aqui! nanana nanana mandala</button>
               </li>
             {/if}
           {/each}
@@ -137,7 +158,7 @@ import Token from '$lib/Token.svelte';
       </li>
     {:else}
       <li>
-        <h2 class="level-2 rectangle">Chispita! unete! nanana nanana mandala</h2>
+        <button class="level-2 rectangle bg-gray-200 p-2 hover:font-bold hover:bg-gray-300">Chispita! unete, click aqui! nanana nanana mandala</button>
       </li>
     {/if}
   {/each}
@@ -147,10 +168,7 @@ import Token from '$lib/Token.svelte';
 
 
 :root {
-  --level-1: #8dccad;
-  --level-2: #f5cc7f;
-  --level-3: #7b9fe0;
-  --level-4: #f27c8d;
+
   --black: black;
 }
 
@@ -170,7 +188,7 @@ ol {
 .level-1 {
   width: 50%;
   margin: 0 auto 40px;
-  background: var(--level-1);
+  
 }
 
 .level-1::before {
@@ -232,7 +250,7 @@ ol {
 .level-2 {
   width: 70%;
   margin: 0 auto 40px;
-  background: var(--level-2);
+  
 }
 
 .level-2::before {
@@ -293,7 +311,6 @@ ol {
 
 .level-3 {
   margin-bottom: 20px;
-  background: var(--level-3);
 }
 
 
@@ -321,7 +338,7 @@ ol {
 
 .level-4 {
   font-weight: normal;
-  background: var(--level-4);
+  
 }
 
 .level-4::before {
