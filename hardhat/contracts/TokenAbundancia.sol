@@ -67,9 +67,11 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
-    uint256 PRICE = 0.025 ether;
+    uint256 immutable PRICE;
     address public dev;
     TonyRiosNFT public tonyNFT;
+
+    string private _url = '';
 
     mapping (uint256 => uint256[2]) public _referrer;
     mapping (uint256 => uint256) public _parent;
@@ -100,14 +102,15 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
     event Join(uint256 tokenIdRef, uint256 tokenId);
 
     // Mandala el token de la Abundancia
-    constructor(address dev_) ERC721("Mandala", "MDL") {
+    constructor(address dev_, string memory url_, uint256 price_) ERC721("Mandala", "MDL") {
       tonyNFT = new TonyRiosNFT();
       dev = dev_;
+      _url = url_;
+      PRICE = price_;      
       _tokenIdCounter.increment();
       _safeMint(msg.sender, _tokenIdCounter.current());
       _detail[_tokenIdCounter.current()] = "Genesis mandala, a ver si esto me saca de los numeros rojos-";
       _tokenIdCounter.increment();
-
     }
 
     // status
@@ -336,6 +339,7 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
               abi.encodePacked(
                 '{"name":"',_names[_status],','
                 '"description":"',_descs[_status],'",',
+                '"external_url":"',_url,Strings.toString(tokenId),'",', 
                 '"image":"ipfs://',_images[_status],'"}'
                         /*
                         '{"name":"',_names[tokenId],'",', // You can add whatever name here

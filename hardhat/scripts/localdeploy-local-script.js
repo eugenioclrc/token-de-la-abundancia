@@ -24,7 +24,7 @@ async function main() {
   const [deployer] = await ethers.getSigners();
   // We get the contract to deploy
   const Mandala = await ethers.getContractFactory("MandalaTokenNftAbundancia");
-  const mandala = await Mandala.deploy(DEV_ADDRESS);
+  const mandala = await Mandala.deploy(DEV_ADDRESS, 'http://127.0.0.1:3000/app/token?token=', ethers.utils.parseEther("0.025"));
   await mandala.deployed();
 
   const MulticallMakerdao = await ethers.getContractFactory("MulticallMakerdao");
