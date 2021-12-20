@@ -5,6 +5,16 @@
         "internalType": "address",
         "name": "dev_",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "url_",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price_",
+        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
