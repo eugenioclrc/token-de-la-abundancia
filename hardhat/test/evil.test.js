@@ -10,7 +10,7 @@ describe("Evil test", function() {
 
   it("Should mint genesis NFT", async function() {
     const MandalaTokenNftAbundancia = await ethers.getContractFactory("MandalaTokenNftAbundancia");
-    token = await MandalaTokenNftAbundancia.deploy(dev.address);
+    token = await MandalaTokenNftAbundancia.deploy(dev.address, 'http://127.0.0.1:3000/app/token?token=', ethers.utils.parseEther("0.025"));
     await token.deployed();
 
     expect(await token.balanceOf(deployer.address)).to.eq(1);
