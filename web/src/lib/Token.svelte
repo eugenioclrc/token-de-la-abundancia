@@ -1,4 +1,6 @@
 <script>
+  import { base } from '$app/paths';
+
   import { nftAddress, networkDetails } from '../store/index';
   export let token = {}
 
@@ -6,7 +8,7 @@
 
   <div class="flex flex-wrap">
     <div class="grow">
-      <a href={'/app/token?token='+token.id} class="hover:underline font-bold w-100 block">
+      <a href={base+'/app/token?token='+token.id} class="hover:underline font-bold w-100 block">
         Token id: {token.id}
       </a>
     </div>

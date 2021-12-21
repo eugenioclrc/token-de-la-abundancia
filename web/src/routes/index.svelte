@@ -1,9 +1,12 @@
+<script>
+import { base } from '$app/paths';
+</script>
 
     <header class="bg-gray-800">
         <nav class="container px-6 py-4 mx-auto md:flex md:justify-between md:items-center">
             <div class="flex items-center justify-between">
                 <a class="text-xl font-bold text-white transition-colors duration-300 transform md:text-2xl hover:text-indigo-400"
-                    href="/">El token de la abundancia</a>
+                    href="{base}/">El token de la abundancia</a>
     
                 
             </div>
@@ -17,7 +20,7 @@
     
                 <div class="flex justify-center mt-8">
                     <a class="m-2 px-8 py-2 text-lg font-medium text-white transition-colors duration-300 transform bg-indigo-600 rounded hover:bg-indigo-500"
-                        href="./app/">Empezar</a>
+                        href="{base}/app/">Empezar</a>
 										<a class="m-2 px-8 py-2 text-lg font-medium bg-white transition-colors duration-300 transform text-indigo-600 rounded hover:text-indigo-500"
                         href="#more">Saber mas</a>
                 </div>
@@ -70,7 +73,7 @@
                 <div class="mt-8 md:mt-0 md:w-1/2">
                     <h3 class="text-2xl font-semibold text-gray-800">Basta de chachara como participo?</h3>
                     <p class="max-w-md mt-4 text-gray-600">Si no fuiste invitado vas a tener que navegar por los sueños de los participantes y buscar un nft que este en el estado FUEGO
-                    <a href="./app/" class="block mt-8 text-indigo-700 underline">Ver listado de NFTs</a>
+                    <a href="{base}/app/" class="block mt-8 text-indigo-700 underline">Ver listado de NFTs</a>
                 </div>
             </div>
         </div>

@@ -1,4 +1,5 @@
 <script>
+  import { base } from '$app/paths';
   import { lastToken, wallet, getTokens, contracts, nftAddress, networkDetails } from '../../store/index';
 
   import { parseEther } from "@ethersproject/units";
@@ -45,7 +46,7 @@
           {#each tokens as token}
             <tr class="text-gray-700">
               <td class="px-4 py-3 text-ms font-semibold border">
-                <a href={'/app/token?token='+token.id} class="flex hover:underline text-blue-800 font-semibold">{token.id}</a>
+                <a href={base+'/app/token?token='+token.id} class="flex hover:underline text-blue-800 font-semibold">{token.id}</a>
               </td>
               <td class="px-4 py-3 border">
                 <div class="flex items-center text-sm">
