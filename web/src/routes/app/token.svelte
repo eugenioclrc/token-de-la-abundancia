@@ -25,9 +25,30 @@
     document.location.reload();
   }
 
+  function getQueryVar(varName){
+    // Grab and unescape the query string - appending an '&' keeps the RegExp simple
+    // for the sake of this example.
+    const queryStr = unescape(window.location.search) + '&';
+
+    // Dynamic replacement RegExp
+    const regex = new RegExp('.*?[&\\?]' + varName + '=(.*?)&.*');
+
+    // Apply RegExp to the query string
+    const val = queryStr.replace(regex, "$1");
+
+    // If the string is the same, we didn't find a match - return false
+    return val == queryStr ? false : val;
+}
+
   onMount(async () => {
     await init();
-    const [tokenid, networkId] = $page.query.get('token').split('-');
+    let tokenid, networkId;
+
+    try {
+      [tokenid, networkId] = $page.query.get('token').split('-');
+    } catch (e) {
+      [tokenid, networkId] = getQueryVar('token').split('-');
+    }
     currentPage = $page.query.get('token');
     const net = await getTokensNetwork(tokenid);
     const parsedNet = net.map(responseToToken);
