@@ -13,7 +13,14 @@ const { ethers } = hre;
 const fs = require("fs");
 const path = require("path");
 
+const dataFile = path.join(__dirname, "../../web/src/store/data.json");
+
 async function main() {
+  if(!hre.network.config.chainId) {
+    console.log("Please set a network in your hardhat.config.js file");
+    process.exit();
+  }
+
   await hre.run("compile");
   // Hardhat always runs the compile task when running scripts with its command
   // line interface.
@@ -24,7 +31,7 @@ async function main() {
   const [deployer] = await ethers.getSigners();
   // We get the contract to deploy
   const Mandala = await ethers.getContractFactory("MandalaTokenNftAbundancia");
-  const mandala = await Mandala.deploy(DEV_ADDRESS, 'http://127.0.0.1:3000/app/token?token=', ethers.utils.parseEther("0.025"));
+  const mandala = await Mandala.deploy(DEV_ADDRESS, 'http://127.0.0.1:3000/app/token?token=', ethers.utils.parseEther("0.025"), hre.network.config.chainId);
   await mandala.deployed();
 
   const MulticallMakerdao = await ethers.getContractFactory("MulticallMakerdao");
@@ -32,24 +39,27 @@ async function main() {
   await multicallMakerdao.deployed();
   console.log("multicallMakerdao deployed to:", multicallMakerdao.address);
 
-  
-
-  console.log("mandando ether a cuenta de test");
-  await deployer.sendTransaction({
-    to: DEV_ADDRESS,
-    value: ethers.utils.parseEther("1.0"),
-  });
+  if (String(hre.network.config.chainId) == '31337') {
+    console.log("mandando ether a cuenta de test");
+    await deployer.sendTransaction({
+      to: DEV_ADDRESS,
+      value: ethers.utils.parseEther("1.0"),
+    });
+  }
   console.log("mandala deployed to:", mandala.address);
   copyAbi();
 
   const tonyNFT = await mandala.tonyNFT();
   
-  fs.writeFileSync(path.join(__dirname, "../../web/src/store/data.json"), JSON.stringify({
+  const dataToSave = JSON.parse(fs.readFileSync(dataFile)) || {};
+  dataToSave[String(hre.network.config.chainId) || '31337'] = {
     mandalaAddress: mandala.address,
     multicallAddress: multicallMakerdao.address,
     tonyAddress: tonyNFT,
     NETWORK_ID: hre.network.config.chainId || '31337',
-  }, null, 2));
+  };
+  
+  fs.writeFileSync(dataFile, JSON.stringify(dataToSave, null, 2));
 }
 
 function copyAbi() {

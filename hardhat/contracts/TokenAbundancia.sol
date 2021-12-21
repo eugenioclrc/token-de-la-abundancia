@@ -95,7 +95,7 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
 
     event LadderUp(address owner, uint256 tokenId);
     event Join(uint256 tokenIdRef, uint256 tokenId);
-
+    
     constructor(address dev_, string memory url_, uint256 price_, uint256 networkid_) public ERC721("Mandalas", "MDL") {
       tonyNFT = new TonyRiosNFT();
       dev = dev_;
@@ -136,6 +136,10 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
       }
       
       return 3;
+    }
+
+    function updateUrl(string memory url_) external onlyOwner{
+      _url = url_;
     }
 
     function updateDetail(uint256 tokenId, string memory detail) public {
