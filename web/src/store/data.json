@@ -1,6 +1,14 @@
 {
-  "mandalaAddress": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-  "multicallAddress": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
-  "tonyAddress": "0x3B02fF1e626Ed7a8fd6eC5299e2C54e1421B626B",
-  "NETWORK_ID": "31337"
+  "4": {
+    "mandalaAddress": "0x5cEA8a30e54315dAe7d296A646FA149AA292EE97",
+    "multicallAddress": "0xb4ad66c931274235F2205d8a4330AA1Bf4F5177C",
+    "tonyAddress": "0xd5BD1C4e5eE4Dd379eB4DA485C80Ca4e00a460eC",
+    "NETWORK_ID": 4
+  },
+  "31337": {
+    "mandalaAddress": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+    "multicallAddress": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+    "tonyAddress": "0x3B02fF1e626Ed7a8fd6eC5299e2C54e1421B626B",
+    "NETWORK_ID": 31337
+  }
 }

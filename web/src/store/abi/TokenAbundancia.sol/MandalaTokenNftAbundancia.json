@@ -15,6 +15,11 @@
         "internalType": "uint256",
         "name": "price_",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "networkid_",
+        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
@@ -706,6 +711,19 @@
       }
     ],
     "name": "updateDetail",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "url_",
+        "type": "string"
+      }
+    ],
+    "name": "updateUrl",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

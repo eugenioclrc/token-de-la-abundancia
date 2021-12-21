@@ -5,12 +5,15 @@ import { Contract } from "@ethersproject/contracts";
 
 import { Contract as MCALLContract, Provider as MCALLProvider, setMulticallAddress } from "ethers-multicall";
 
-import { mandalaAddress, multicallAddress, tonyAddress, NETWORK_ID } from './data.json';
+import CONFIG from './data.json';
+
 
 import telarABI from "./abi/TokenAbundancia.sol/MandalaTokenNftAbundancia.json";
-import tonyABI from "./abi/TokenAbundancia.sol/TonyRiosNFT.json";
+// import tonyABI from "./abi/TokenAbundancia.sol/TonyRiosNFT.json";
 
-let provider, providerEthcall, telarNFT, tonyNFT, telarNFTMcall, tonyNFTMcall;
+import nets from "./nets.json";
+
+let provider, providerEthcall, telarNFT, /* tonyNFT,*/  telarNFTMcall /*, tonyNFTMcall*/;
 
 export const networkDetails = writable(null);
 
@@ -19,6 +22,8 @@ export const signer = writable(null);
 export const wrongNetwork = writable(false);
 export const lastToken = writable(0);
 export const metamaskInstall = writable(false);
+
+export const nftAddress = writable('');
 
 export const contracts = {};
 
@@ -53,21 +58,24 @@ export async function init() {
   const _networkDetails = await provider.getNetwork();
   networkDetails.set(_networkDetails);
   // if (_networkDetails.name !== "bnbt") {
-  if (_networkDetails.chainId !== 31337) {
+  if (!CONFIG[String(_networkDetails.chainId)]) {
     wrongNetwork.set(true);
     return;
   } else {
     wrongNetwork.set(false);
   }
+
+  const { mandalaAddress, multicallAddress, tonyAddress, NETWORK_ID } = CONFIG[String(_networkDetails.chainId)];
+  nftAddress.set(mandalaAddress);
   setMulticallAddress(NETWORK_ID, multicallAddress);
   await providerEthcall.init();
   if (_wallet) {
     telarNFT = new Contract(mandalaAddress, telarABI, signer);
     contracts.telarNFT = telarNFT;
     telarNFTMcall = new MCALLContract(mandalaAddress, telarABI);
-        
-    tonyNFT = new Contract(tonyAddress, tonyABI, signer);
-    tonyNFTMcall = new MCALLContract(tonyAddress, tonyABI);
+    window.t = telarNFT
+    // tonyNFT = new Contract(tonyAddress, tonyABI, signer);
+    // tonyNFTMcall = new MCALLContract(tonyAddress, tonyABI);
   }
   
   const _lastToken = await telarNFT.tokenIdCounter();
@@ -90,24 +98,23 @@ export async function login() {
   await init();
 }
 
-export async function changeNetwork() {
-  await window.ethereum.request({
-    method: "wallet_addEthereumChain",
-    params: [
-      {
-        chainId: `0x${(97).toString(16)}`,
-        chainName: "TEST Binance Smart Chain",
-        nativeCurrency: {
-          name: "BNB",
-          symbol: "bnb",
-          decimals: 18,
-        },
-        rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
-        blockExplorerUrls: ["https://testnet.bscscan.com/"],
-        // rpcUrls: ['https://bsc-dataseed.binance.org/'],
-        // blockExplorerUrls: ['https://bscscan.com/'],
-      },
-    ],
+export async function changeNetwork(selected) {
+  
+  if (!nets[selected]) {
+    // no es una red valida
+    throw new Error("Invalid selected network");
+  }
+
+  try {
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [nets[selected]],
+    });
+  } catch (e) { /*empty */}
+
+  window.ethereum.request({
+    method: "wallet_switchEthereumChain",
+    params: [{chainId: nets[selected].chainId}],
   });
 }
 

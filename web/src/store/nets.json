@@ -1,0 +1,86 @@
+{
+  "hardhat": {
+    "chainId": "0x7a69",
+    "chainName": "hardhat",
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "http://localhost:8545"
+    ]
+  },
+  "ropsten": {
+    "chainId": "0x3",
+    "chainName": "Red de prueba Ropsten",
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+    ],
+    "blockExplorerUrls": [
+      "https://ropsten.etherscan.io"
+    ]
+  },
+  "rinkeby": {
+    "chainId": "0x4",
+    "chainName": "Red de prueba Rinkeby",
+    "nativeCurrency": {
+      "name": "ETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+    ],
+    "blockExplorerUrls": [
+      "https://rinkeby.etherscan.io"
+    ]
+  },
+  "binancetest": {
+    "chainId": "0x61",
+    "chainName": "TEST Binance Smart Chain",
+    "nativeCurrency": {
+      "name": "BNB",
+      "symbol": "bnb",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://data-seed-prebsc-1-s1.binance.org:8545/"
+    ],
+    "blockExplorerUrls": [
+      "https://testnet.bscscan.com/"
+    ]
+  },
+  "matic": {
+    "chainId": "0x63",
+    "chainName": "Matic Network",
+    "nativeCurrency": {
+      "name": "MATIC",
+      "symbol": "matic",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://rpc.slock.it/"
+    ],
+    "blockExplorerUrls": [
+      "https://maticscan.io/"
+    ]
+  },
+  "mumbai": {
+    "chainId": "0x13881",
+    "chainName": "Mumbai Testnet",
+    "nativeCurrency": {
+      "name": "MATIC",
+      "symbol": "matic",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://rpc-mumbai.maticvigil.com"
+    ]
+  }
+}

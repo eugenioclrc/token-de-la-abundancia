@@ -1,8 +1,8 @@
 <script>
-  import { lastToken, wallet, getTokens, contracts } from '../../store/index';
+  import { lastToken, wallet, getTokens, contracts, nftAddress, networkDetails } from '../../store/index';
 
   import { parseEther } from "@ethersproject/units";
-
+  
   let tokens = [];
 
   $: if($wallet && $lastToken) {
@@ -51,6 +51,11 @@
                 <div class="flex items-center text-sm">
                   <div>
                     <p class="font-semibold text-blue-800">{token.owner.slice(0,4)}...{token.owner.slice(-4)}</p>
+                    {#if $networkDetails.chainId == 4}
+                      <a href="https://testnets.opensea.io/assets/{$nftAddress}/{token.id}" target="_blank" class="text-blue-800 hover:underline">
+                        Opensea
+                      </a>
+                    {/if}
                   </div>
                 </div>
               </td>

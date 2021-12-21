@@ -1,5 +1,7 @@
 <script>
+  import { nftAddress, networkDetails } from '../store/index';
   export let token = {}
+
 </script>
 
   <div class="flex flex-wrap">
@@ -22,10 +24,15 @@
     <div class="w-full border-t border-gray-500">
       <blockquote class="relative p-4 text-xl italic border-l-4 bg-neutral-100 bg-opacity-20 text-neutral-600 border-neutral-500 quote">      
         <p class="mb-4">"{token.detail}"</p>
-        <cite class="flex items-center">
+        <cite class="flex flex-col">
           <span class="mb-1 text-sm italic font-bold">
             Owner: {String(token.owner).slice(0, 4)}...{String(token.owner).slice(-4)}
           </span>
+          {#if $networkDetails.chainId == 4}
+            <a href="https://testnets.opensea.io/assets/{$nftAddress}/{token.id}" target="_blank" class="text-blue-800 hover:underline">
+              Item in Opensea testnet
+            </a>
+          {/if}
         </cite>
       </blockquote>
     </div>

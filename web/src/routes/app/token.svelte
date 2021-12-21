@@ -2,12 +2,11 @@
   import { onMount } from 'svelte'
   import { page } from '$app/stores';
   import { contracts, init, getTokensNetwork } from '../../store/index';
-import Token from '$lib/Token.svelte';
+  import { parseEther } from "@ethersproject/units";
+  import Token from '$lib/Token.svelte';
 
-  let token = {
-    childs: []
-  };
-
+  let token = null;
+  let loading = true;
   function responseToToken(d) {
     if (String(d.id) === '0') {
       return null;
@@ -20,15 +19,24 @@ import Token from '$lib/Token.svelte';
     };
   }
 
+  let currentPage = '';
+
+  $: if (currentPage && $page.query.get('token') !== currentPage) {
+    document.location.reload();
+  }
+
   onMount(async () => {
     await init();
-    const tokenid = $page.query.get('token');
+    const [tokenid, networkId] = $page.query.get('token').split('-');
+    currentPage = $page.query.get('token');
     const net = await getTokensNetwork(tokenid);
     const parsedNet = net.map(responseToToken);
     token = parsedNet[1];
-    token.parent = parsedNet[0];
 
-    token.childs = [parsedNet[2], parsedNet[3]];
+    if (token) {
+      token.parent = parsedNet[0];
+      token.childs = [parsedNet[2], parsedNet[3]];
+    }
 
     if (parsedNet[2]) {
       parsedNet[2].childs = [
@@ -83,87 +91,117 @@ import Token from '$lib/Token.svelte';
         parsedNet[15],
       ];
     }
-    console.log({token})
+    loading = false;
   });
 
+  async function join(tokenId) {
+    loading = true;
+    try {
+      const dream = prompt('Cual es tu sueño?');
+      const tx = await contracts.telarNFT.mint(tokenId, dream, {value: parseEther("0.025") });
+      await tx.wait();
+      document.location.reload();
+    } catch(err ) {
+    }
+    
+    loading = false;
+    // re cabeza
+  }
+
+
 </script>
-<div class="m-4">
-  {#if token.parent}
-    <div class="level-1 rectangle border " 
-    class:border-red-700={token.parent.status == 0}
-    class:border-blue-600={token.parent.status == 1}
-    class:border-green-100={token.parent.status == 2}
-    class:border-blue-100={token.parent.status == 3}
-    style="margin-bottom: 20px;">
-      <Token token={token.parent}></Token>
-    </div>
-  {/if}
-  <div class="level-1 rectangle border"
-  class:border-red-700={token.status == 0}
-    class:border-blue-600={token.status == 1}
-    class:border-green-100={token.status == 2}
-    class:border-blue-100={token.status == 3}>
-    <Token {token}></Token>
+{#if loading}
+  loading
+{:else if !token}
+  <div class="shadow m-6 p-3">
+      <div class="text-red-600">
+        <h4 class="text-xl">Error</h4>
+        <p class="text-lg">Token not found</p>
+        <a class="text-blue-800" href="/app">List all tokens</a>
+      </div>  
   </div>
-  <!-- <button on:click={() => { alert('todo'); }} class="font-bold rounded bg-gray-200 p-2">UNIRME!</button> -->
-  <ol class="level-2-wrapper">
-  {#each token.childs as level1}
-    {#if level1}
-      <li>
-        <div class="level-2 rectangle border"
-        class:border-red-700={level1.status == 0}
-    class:border-blue-600={level1.status == 1}
-    class:border-green-100={level1.status == 2}
-    class:border-blue-100={level1.status == 3}>
-          <Token token={level1}></Token>
-        </div>
-        <ol class="level-3-wrapper">
-          {#each level1.childs || [] as level2}
-            {#if level2}
-              <li>
-                <div class="level-3 rectangle border"
-                class:border-red-700={level2.status == 0}
-    class:border-blue-600={level2.status == 1}
-    class:border-green-100={level2.status == 2}
-    class:border-blue-100={level2.status == 3}>
-                  <Token token={level2}></Token>
-                </div>
-                <ol class="level-4-wrapper">
-                  {#each level2.childs || [] as level3}
-                    {#if level3}
-                      <li>
-                        <div class="level-4 rectangle border"
-                        class:border-red-700={level3.status == 0}
-    class:border-blue-600={level3.status == 1}
-    class:border-green-100={level3.status == 2}
-    class:border-blue-100={level3.status == 3}>
-                          <Token token={level3}></Token>
-                        </div>
-                      </li>
-                    {:else}
-                      <li>
-                        <button class="level-4 rectangle bg-gray-200 p-2 hover:font-bold hover:bg-gray-300">Chispita! unete, click aqui! nanana nanana mandala</button>
-                      </li>
-                    {/if}
-                  {/each}
-                </ol>
-              </li>
-            {:else}
-              <li>
-                <button class="level-3 rectangle bg-gray-200 p-2 hover:font-bold hover:bg-gray-300">Chispita! unete, click aqui! nanana nanana mandala</button>
-              </li>
-            {/if}
-          {/each}
-        </ol>
-      </li>
-    {:else}
-      <li>
-        <button class="level-2 rectangle bg-gray-200 p-2 hover:font-bold hover:bg-gray-300">Chispita! unete, click aqui! nanana nanana mandala</button>
-      </li>
+{:else}
+  <div class="m-4">
+    {#if token.parent}
+      <div class="level-1 rectangle border " 
+      class:border-red-700={token.parent.status == 0}
+      class:border-blue-600={token.parent.status == 1}
+      class:border-green-100={token.parent.status == 2}
+      class:border-blue-100={token.parent.status == 3}
+      style="margin-bottom: 20px;">
+        <Token token={token.parent}></Token>
+      </div>
     {/if}
-  {/each}
-  </ol>
-  </div>
+    <div class="level-1 rectangle border"
+    class:border-red-700={token.status == 0}
+      class:border-blue-600={token.status == 1}
+      class:border-green-100={token.status == 2}
+      class:border-blue-100={token.status == 3}>
+      <Token {token}></Token>
+    </div>
+    <!-- <button on:click={() => { alert('todo'); }} class="font-bold rounded bg-gray-200 p-2">UNIRME!</button> -->
+    <ol class="level-2-wrapper">
+    {#each token.childs as level1}
+      {#if level1}
+        <li>
+          <div class="level-2 rectangle border"
+          class:border-red-700={level1.status == 0}
+      class:border-blue-600={level1.status == 1}
+      class:border-green-100={level1.status == 2}
+      class:border-blue-100={level1.status == 3}>
+            <Token token={level1}></Token>
+          </div>
+          <ol class="level-3-wrapper">
+            {#each level1.childs || [] as level2}
+              {#if level2}
+                <li>
+                  <div class="level-3 rectangle border"
+                  class:border-red-700={level2.status == 0}
+      class:border-blue-600={level2.status == 1}
+      class:border-green-100={level2.status == 2}
+      class:border-blue-100={level2.status == 3}>
+                    <Token token={level2}></Token>
+                  </div>
+                  <ol class="level-4-wrapper">
+                    {#each level2.childs || [] as level3}
+                      {#if level3}
+                        <li>
+                          <div class="level-4 rectangle border"
+                          class:border-red-700={level3.status == 0}
+      class:border-blue-600={level3.status == 1}
+      class:border-green-100={level3.status == 2}
+      class:border-blue-100={level3.status == 3}>
+                            <Token token={level3}></Token>
+                          </div>
+                        </li>
+                      {:else}
+                        <li>
+                          <button class="level-4 rectangle bg-gray-200 p-2 hover:font-bold hover:bg-gray-300"
+                          on:click={() => join(level2.id)}>Chispita! unete, click aqui! nanana nanana mandala</button>
+                        </li>
+                      {/if}
+                    {/each}
+                  </ol>
+                </li>
+              {:else}
+                <li>
+                  <button class="level-3 rectangle bg-gray-200 p-2 hover:font-bold hover:bg-gray-300"
+                  on:click={() => join(level1.id)}>Chispita! unete, click aqui! nanana nanana mandala</button>
+                </li>
+              {/if}
+            {/each}
+          </ol>
+        </li>
+      {:else}
+        <li>
+          <button class="level-2 rectangle bg-gray-200 p-2 hover:font-bold hover:bg-gray-300"
+          on:click={() => join(token.id)}>Chispita! unete, click aqui! nanana nanana mandala</button>
+        </li>
+      {/if}
+    {/each}
+    </ol>
+    </div>
+{/if}
   <style>
 
 

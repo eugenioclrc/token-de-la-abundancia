@@ -1,14 +1,58 @@
 <script>
-    import { wrongNetwork, init, login, changeNetwork, wallet } from '../../store/index';
+    import { dev } from '$app/env';
+
+    import { wrongNetwork, networkDetails, init, login, changeNetwork, wallet } from '../../store/index';
     import { onMount } from 'svelte';
 
     onMount(() => {
         init();
     });
 
+    async function pickNetwork(n) {
+        await changeNetwork(n);
+        modalOpen = false;
+    }
+
 	let isOpen = false;
+    let modalOpen = false;
 </script>
 
+{#if modalOpen}
+  <div class="modal h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+    <!-- modal -->
+    <div class="bg-white rounded shadow-lg w-10/12 md:w-1/3">
+      <!-- modal header -->
+      <div class="border-b px-4 py-2 flex justify-between items-center">
+        <h3 class="font-semibold text-lg">Select a network</h3>
+        <button class="text-black close-modal" on:click={() => modalOpen = false}>&cross;</button>
+      </div>
+      <!-- modal body -->
+      <div class="p-3">
+        Selecciona la red que quieres usar
+      </div>
+      <div class="flex justify-end items-center w-100 border-t p-3 flex-wrap">
+        <!--
+        <button class="bg-gray-600 hover:bg-gray-700 px-3 py-1 m-2 rounded text-white" on:click={() => pickNetwork('mumbai') }>
+            {#if $networkDetails.chainId == 80001}&check;{/if} Mumbai MaticTest
+        </button>
+        <button class="bg-gray-600 hover:bg-gray-700 px-3 py-1 m-2 rounded text-white" on:click={() => pickNetwork('ropsten') }>
+            {#if $networkDetails.chainId == 3}&check;{/if} Ropsten
+        </button>
+        -->
+        <button class="bg-gray-600 hover:bg-gray-700 px-3 py-1 m-2 rounded text-white" on:click={() => pickNetwork('rinkeby') }>
+            {#if $networkDetails.chainId == 4}&check;{/if}
+            Rinkeby
+        </button>
+        {#if dev}
+            <button class="bg-gray-600 hover:bg-gray-700 px-3 py-1 m-2 rounded text-white" on:click={() => pickNetwork('hardhat') }>
+                {#if $networkDetails.chainId == 31337}&check;{/if}
+                HardHat
+            </button>
+        {/if}
+      </div>
+    </div>
+    </div>
+{/if}
     <header class="bg-gray-800">
         <nav class="container px-6 py-4 mx-auto md:flex md:justify-between md:items-center">
             <div class="flex items-center justify-between">
@@ -35,17 +79,16 @@
                 <a class="text-sm font-medium text-gray-200 transition-colors duration-300 transform hover:text-indigo-400"
                     href="/app">Listado</a>
                 {#if $wrongNetwork}
-                    <button class="px-4 py-1 text-sm font-medium text-center text-gray-200 transition-colors duration-300 transform border rounded hover:bg-indigo-400"
-                    on:click={() => changeNetwork()}>Wrong network</button>
+                    <button class="px-4 py-1 text-sm font-medium text-center text-gray-200 transition-colors duration-300 transform border rounded hover:bg-indigo-400 uppercase"
+                    on:click={() => modalOpen = true}>{$networkDetails && $networkDetails.name} - Wrong network</button>
                 {:else}
-                    <span class="px-4 py-1 text-sm font-medium text-center text-gray-200 transition-colors duration-300 transform border rounded">
-                        ROPSTEN
+                    <span class="px-4 py-1 text-sm font-medium text-center text-gray-200 transition-colors duration-300 transform border rounded cursor-pointer hover:bg-indigo-400 uppercase" on:click={() => modalOpen = true}>
+                        {$networkDetails && $networkDetails.name}
                     </span>
-
                 {/if}
                 {#if $wallet}
-                <a class="px-4 py-1 text-sm font-medium text-center text-gray-200 transition-colors duration-300 transform border rounded hover:bg-indigo-400"
-                    href="/app/holdings">{$wallet.slice(0,4)}...{$wallet.slice(-4)}</a>
+                    <a class="px-4 py-1 text-sm font-medium text-center text-gray-200 transition-colors duration-300 transform border rounded hover:bg-indigo-400"
+                        href="/app/holdings">{$wallet.slice(0,4)}...{$wallet.slice(-4)}</a>
                 {/if}
             </div>
         </nav>
@@ -58,7 +101,7 @@
     
                 <div class="flex justify-center mt-8">
                     <button class="m-2 px-8 py-2 text-lg font-medium bg-white transition-colors duration-300 transform text-indigo-600 rounded hover:text-indigo-500"
-                        on:click={() => changeNetwork()}>Cambiar a Ropsten</button>
+                        on:click={() => modalOpen = true }>Cambiar de Red</button>
                 </div>
             </div>   
           </section>
