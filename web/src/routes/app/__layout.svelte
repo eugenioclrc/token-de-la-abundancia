@@ -1,5 +1,6 @@
 <script>
     import { dev } from '$app/env';
+    import { base } from '$app/paths';
 
     import { wrongNetwork, networkDetails, init, login, changeNetwork, wallet } from '../../store/index';
     import { onMount } from 'svelte';
@@ -57,7 +58,7 @@
         <nav class="container px-6 py-4 mx-auto md:flex md:justify-between md:items-center">
             <div class="flex items-center justify-between">
                 <a class="text-xl font-bold text-white transition-colors duration-300 transform md:text-2xl hover:text-indigo-400"
-                    href="/">El token de la abundancia</a>
+                    href="{base}/">El token de la abundancia</a>
     
                 <!-- Mobile menu button -->
                 <div on:click={() => isOpen = !isOpen} class="flex md:hidden">
@@ -77,7 +78,7 @@
                 class="flex-col mt-2 space-y-4 md:flex md:space-y-0 md:flex-row md:items-center md:space-x-10 md:mt-0
 								{isOpen ? 'flex' : 'hidden'}">
                 <a class="text-sm font-medium text-gray-200 transition-colors duration-300 transform hover:text-indigo-400"
-                    href="/app">Listado</a>
+                    href="{base}/app">Listado</a>
                 {#if $wrongNetwork}
                     <button class="px-4 py-1 text-sm font-medium text-center text-gray-200 transition-colors duration-300 transform border rounded hover:bg-indigo-400 uppercase"
                     on:click={() => modalOpen = true}>{$networkDetails && $networkDetails.name} - Wrong network</button>
@@ -88,7 +89,7 @@
                 {/if}
                 {#if $wallet}
                     <a class="px-4 py-1 text-sm font-medium text-center text-gray-200 transition-colors duration-300 transform border rounded hover:bg-indigo-400"
-                        href="/app/holdings">{$wallet.slice(0,4)}...{$wallet.slice(-4)}</a>
+                        href="{base}/app/holdings">{$wallet.slice(0,4)}...{$wallet.slice(-4)}</a>
                 {/if}
             </div>
         </nav>
