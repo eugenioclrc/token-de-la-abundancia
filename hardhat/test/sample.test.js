@@ -12,7 +12,7 @@ describe("Basic test", function() {
     
 
     const MandalaTokenNftAbundancia = await ethers.getContractFactory("MandalaTokenNftAbundancia");
-    token = await MandalaTokenNftAbundancia.deploy(dev.address, 'http://127.0.0.1:3000/app/token?token=', ethers.utils.parseEther("0.025"));
+    token = await MandalaTokenNftAbundancia.deploy(dev.address, 'http://127.0.0.1:3000/app/token?token=', ethers.utils.parseEther("0.025"), hre.network.config.chainId);
     await token.deployed();
 
     expect(await token.balanceOf(deployer.address)).to.eq(1);

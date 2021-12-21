@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.2;
-
-import "hardhat/console.sol";
+pragma solidity ^0.8.11;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -14,52 +11,49 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "base64-sol/base64.sol";
 
 contract TonyRiosNFT is ERC721, Ownable {
-    using Counters for Counters.Counter;
+  using Counters for Counters.Counter;
 
-    Counters.Counter private _tokenIdCounter;
+  Counters.Counter private _tokenIdCounter;
 
-    mapping(address => bool) private _claimed;
+  mapping(address => bool) private _claimed;
 
-    constructor() ERC721('Antonio', 'ATR') {}
+  constructor() ERC721("Antonio", "ATR") {
+  }
 
-    function safeMint(address to) public onlyOwner {
-      if(_claimed[to]) {
-        return;
-      }
-      _claimed[to] = true;
-      uint256 tokenId = _tokenIdCounter.current();
-      _tokenIdCounter.increment();
-      _safeMint(to, tokenId);
-              
+  function safeMint(address to) public onlyOwner {
+    if (_claimed[to]) {
+      return;
     }
+    _claimed[to] = true;
+    uint256 tokenId = _tokenIdCounter.current();
+    _tokenIdCounter.increment();
+    _safeMint(to, tokenId);     
+  }
 
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721)
-        returns (string memory)
-    {
-      require(_exists(tokenId), "ERC721: URI query for nonexistent token");
+  function tokenURI(uint256 tokenId)
+      public
+      view
+      override(ERC721)
+      returns (string memory)
+  {
+    require(_exists(tokenId), "ERC721: URI query for nonexistent token");
 
-      return string(
-        abi.encodePacked(
-          "data:application/json;base64,",
-          Base64.encode(
-            bytes(
-              abi.encodePacked(
-                '{"name":"Tony Rios de la abundancia",'
-                '"description":"Para que nunca te falte y nunca te enganien",',
-                '"image":"ipfs://QmbRFzsy5zQkvetx1b7xzUdn7si7pdHcUnGQgGrvCiL7u1"}'
-              )
+    return string(
+      abi.encodePacked(
+        "data:application/json;base64,",
+        Base64.encode(
+          bytes(
+            abi.encodePacked(
+              "{\"name\":\"Tony Rios de la abundancia\","
+              "\"description\":\"Para que nunca te falte y nunca te enganien\",'"
+              "\"image\":\"ipfs://QmbRFzsy5zQkvetx1b7xzUdn7si7pdHcUnGQgGrvCiL7u1\"}"
             )
           )
         )
-      );
-    }
-
+      )
+    );
+  }
 }
-
-
 
 // contract MandalaTokenNftAbundancia is ERC721, ERC721URIStorage, ERC721Enumerable, Ownable {
 contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
@@ -72,7 +66,7 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
     address public dev;
     TonyRiosNFT public tonyNFT;
 
-    string private _url = '';
+    string private _url = "";
 
     mapping (uint256 => uint256[2]) public _referrer;
     mapping (uint256 => uint256) public _parent;
@@ -80,30 +74,29 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
     mapping (uint256 => bool) private _filled;
     mapping (uint256 => string) private _detail;
 
-    string[] private _names = ['Fuego', 'Aire', 'Tierra', 'Agua'];
+    string[] private _names = ["Fuego", "Aire", "Tierra", "Agua"];
     string[] private _descs = [
-      'Con poder de decision y fuerza de voluntad que decide iniciar el camino de la realizacion de tus deseos. Valiente dispuesto a cumplir tus deseos, rompiendo paradigmas, dejando ir miedos y confiando en cada uno de los participantes del telar.',
-      'Trasmite su energia y la comparte. Se encarga de comunicar, trasmitir y sentir pasion por el movimiento.',
-      'Da estabilidad, motivacion y union. Cimiento del telar a traves de la comunicacion y busqueda de soluciones.',
-      'Ve transformados sus deseos en hermosa realidad y se convierte en guia del grupo. Deja fluir y recibe la abundancia multiplicada. Esta posicion es el sosten energetico del circulo.'
+      "Con poder de decision y fuerza de voluntad que decide iniciar el camino de la realizacion de tus deseos. Valiente dispuesto a cumplir tus deseos, rompiendo paradigmas, dejando ir miedos y confiando en cada uno de los participantes del telar.",
+      "Trasmite su energia y la comparte. Se encarga de comunicar, trasmitir y sentir pasion por el movimiento.",
+      "Da estabilidad, motivacion y union. Cimiento del telar a traves de la comunicacion y busqueda de soluciones.",
+      "Ve transformados sus deseos en hermosa realidad y se convierte en guia del grupo. Deja fluir y recibe la abundancia multiplicada. Esta posicion es el sosten energetico del circulo."
     ];
 
     string[] private _images = [
       // fuego
-      'QmWsmyDjbBv2RwmXJuXTEt34ZfxFh3UymGKd6kZibNKigu',
+      "QmWsmyDjbBv2RwmXJuXTEt34ZfxFh3UymGKd6kZibNKigu",
       // aire
-      'QmRmcABuGftuygTw9qLbNEMBm41htDmV5A6ATBjRSNzgdt',
+      "QmRmcABuGftuygTw9qLbNEMBm41htDmV5A6ATBjRSNzgdt",
       // tierra
-      'QmeRNyh7QXYNiJavXishMZDuVXrReGBHrX61A2J1Aaugbg',
+      "QmeRNyh7QXYNiJavXishMZDuVXrReGBHrX61A2J1Aaugbg",
       // agua 
-      'QmPabcDsZ2B5XiUR12WGj5Hig1D5AYod2qzMYHh1f5Rez2'
+      "QmPabcDsZ2B5XiUR12WGj5Hig1D5AYod2qzMYHh1f5Rez2"
     ];
 
     event LadderUp(address owner, uint256 tokenId);
     event Join(uint256 tokenIdRef, uint256 tokenId);
 
-    // Mandala el token de la Abundancia
-    constructor(address dev_, string memory url_, uint256 price_, uint256 networkid_) ERC721("Mandalas", "MDL") {
+    constructor(address dev_, string memory url_, uint256 price_, uint256 networkid_) public ERC721("Mandalas", "MDL") {
       tonyNFT = new TonyRiosNFT();
       dev = dev_;
       _url = url_;
@@ -330,7 +323,7 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
         override(ERC721)
         returns (string memory)
     {
-      require(_exists(tokenId), "ERC721URIStorage: URI query for nonexistent token");
+      require(_exists(tokenId), "URI query for nonexistent token");
 
       uint8 _status = status(tokenId);
       return string(
@@ -339,11 +332,11 @@ contract MandalaTokenNftAbundancia is ERC721, ERC721Enumerable, Ownable {
           Base64.encode(
             bytes(
               abi.encodePacked(
-                '{"name":"',_names[_status],','
-                '"description":"',_descs[_status],'",',
-                '"external_url":"',_url,Strings.toString(tokenId),'-',Strings.toString(networkid),'",', 
-                '"attributes":[{"trait_type":"State","value":"',_names[_status],'"}],',
-                '"image":"ipfs://',_images[_status],'"}'
+                "{\"name\":\"",_names[_status],","
+                "\"description\":\"",_descs[_status],"\",",
+                "\"external_url\":\"",_url,Strings.toString(tokenId),"-",Strings.toString(networkid),"\",", 
+                "\"attributes\":[{\"trait_type\":\"State\",\"value\":\"",_names[_status],"\"}],",
+                "\"image\":\"ipfs://",_images[_status],"\"}"
               )
             )
           )
