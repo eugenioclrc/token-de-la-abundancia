@@ -1,3 +1,6 @@
+<script context="module">
+	export const router = false;
+</script>
 <script>
   import { base } from '$app/paths';
   import { lastToken, wallet, getTokens, contracts, nftAddress, networkDetails } from '../../store/index';

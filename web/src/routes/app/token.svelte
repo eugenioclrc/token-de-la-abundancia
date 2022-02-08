@@ -1,3 +1,6 @@
+<script context="module">
+	export const router = false;
+</script>
 <script>
   import { onMount } from 'svelte'
   import { page } from '$app/stores';
